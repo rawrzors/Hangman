@@ -89,10 +89,10 @@ class Hangman:
 
         while True:
             guess = input("Guess a letter: ")
-            if guess.isalpha():
+            self.output_guessed()
+            if guess.isalpha() and len(guess) == 1:
                 self.guesses.append(guess)
                 self.word_check(guess)
-                print("Guessed "+ format(guess))
             else:
                 print("Please guess a letter")
 
@@ -112,6 +112,12 @@ class Hangman:
             print(" "+letter,end="")
         print()
         print("###############################")
+
+    def output_guessed(self):
+        if(len(self.guesses) > 0):
+            guessString = ','.join(map(str, self.guesses))
+            print("You have already guessed: "+guessString)
+
 
     def game_menu(self):
         self.header()
