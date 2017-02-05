@@ -1,6 +1,6 @@
 class Hangman:
     word = ""
-    currentWord = ""
+    current_word = list()
     difficulty = 1
     maxAttempts = 8
     currentAttempts = 0
@@ -84,31 +84,54 @@ class Hangman:
         print("Hangman game starting...")
         print("Settings - Difficulty: ["+format(self.difficulty)+"] Max attempts: ["+format(self.maxAttempts)+"]")
         word = self.generate_word()
+        self.current_word = list()
+        self.guesses = list()
+        self.currentAttempts = 0
         self.update_word_progress()
         self.output_current_word()
 
         while True:
-            guess = input("Guess a letter: ")
             self.output_guessed()
-            if guess.isalpha() and len(guess) == 1:
+            guess = input("Attempt: [{}] Guess a letter: ".format(self.currentAttempts))
+            if guess.isalpha() and len(guess) == 1 and guess not in self.guesses:
                 self.guesses.append(guess)
-                self.word_check(guess)
+                result = self.word_check(guess)
+                if(result):
+                    print("Correct!")
+                    self.output_current_word()
+                    if(self.check_win()):
+                        return 1;
+                else:
+                    print("Wrong.")
             else:
-                print("Please guess a letter")
+                print("Error: Please guess a single letter that you have not guessed before.")
 
-    #
-    def update_word_progress(self):
-        if self.currentWord == "":
+    def update_word_progress(self, indexes = {}, guess = ""):
+        if len(self.current_word) == 0:
             for letter in self.word:
-                self.currentWord += "_"
+                self.current_word.append("_")
+        else:
+            for i in indexes:
+                self.current_word[i] = guess
+
+    def check_win(self):
+        if set(self.word) == set(self.current_word):
+            print("WINNER!")
+            return True
+        return False
 
     def word_check(self, guess):
-        return
+        if guess in self.word:
+            indexes = self.find(self.word, guess)
+            self.update_word_progress(indexes, guess)
+            return True
+        else:
+            return False
 
     def output_current_word(self):
         print()
         print("###############################")
-        for letter in self.currentWord:
+        for letter in self.current_word:
             print(" "+letter,end="")
         print()
         print("###############################")
@@ -128,11 +151,18 @@ class Hangman:
 
     def get_word(self):
         if self.difficulty == 1:
-            return 'cat'
+            return 'catcat'
         elif self.difficulty == 2:
             return 'tiger'
         elif self.difficulty == 3:
             return 'feline'
+
+    def find(self, lst, a):
+        result = []
+        for i, x in enumerate(lst):
+            if x == a:
+                result.append(i)
+        return result
 
 hangman = Hangman()
 
