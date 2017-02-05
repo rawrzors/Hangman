@@ -92,7 +92,7 @@ class Hangman:
 
         while True:
             self.output_guessed()
-            guess = input("Attempt: [{}] Guess a letter: ".format(self.currentAttempts))
+            guess = input("Attempt: [{}] out of [{}] Guess a letter: ".format(self.currentAttempts,self.maxAttempts))
             if guess.isalpha() and len(guess) == 1 and guess not in self.guesses:
                 self.guesses.append(guess)
                 result = self.word_check(guess)
@@ -103,6 +103,10 @@ class Hangman:
                         return 1;
                 else:
                     print("Wrong.")
+                    if(self.check_max_attempts()):
+                        print("Max attempts reached - you ded")
+                        return 0;
+                self.currentAttempts += 1
             else:
                 print("Error: Please guess a single letter that you have not guessed before.")
 
@@ -117,6 +121,11 @@ class Hangman:
     def check_win(self):
         if set(self.word) == set(self.current_word):
             print("WINNER!")
+            return True
+        return False
+
+    def check_max_attempts(self):
+        if self.currentAttempts >= self.maxAttempts:
             return True
         return False
 
