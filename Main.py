@@ -1,9 +1,9 @@
 from Hangman import Hangman
 
 hangman = Hangman()
-
 hangman.header()
 input("Press enter to begin: ")
+
 
 while True:
     option = hangman.main_menu()

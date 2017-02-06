@@ -1,3 +1,5 @@
+from RandomWord import RandomWord
+
 class Hangman:
     word = ""
     current_word = list()
@@ -5,6 +7,7 @@ class Hangman:
     maxAttempts = 8
     currentAttempts = 0
     guesses = list()
+    word_source = "api"
 
     def header(self, option = None):
         print("--------------")
@@ -83,7 +86,7 @@ class Hangman:
     def start_game(self):
         print("Hangman game starting...")
         print("Settings - Difficulty: ["+format(self.difficulty)+"] Max attempts: ["+format(self.maxAttempts)+"]")
-        word = self.generate_word()
+        self.word = self.get_word()
         self.current_word = list()
         self.guesses = list()
         self.currentAttempts = 0
@@ -150,7 +153,6 @@ class Hangman:
             guessString = ','.join(map(str, self.guesses))
             print("You have already guessed: "+guessString)
 
-
     def game_menu(self):
         self.header()
 
@@ -159,12 +161,18 @@ class Hangman:
         return self.word
 
     def get_word(self):
-        if self.difficulty == 1:
-            return 'catcat'
-        elif self.difficulty == 2:
-            return 'tiger'
-        elif self.difficulty == 3:
-            return 'feline'
+
+        if self.word_source == 'local':
+            if self.difficulty == 1:
+                return 'catcat'
+            elif self.difficulty == 2:
+                return 'tiger'
+            elif self.difficulty == 3:
+                return 'feline'
+        elif self.word_source == 'api':
+            random_word = RandomWord()
+            word = random_word.get_random_word(5)
+            return word
 
     def find(self, lst, a):
         result = []
