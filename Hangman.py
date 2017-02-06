@@ -30,9 +30,9 @@ class Hangman:
             print("0. Exit")
             settings_option = input("Select your option [1,2,0] ")
             if settings_option == "1":
-                hangman.difficulty_menu()
+                self.difficulty_menu()
             elif settings_option == "2":
-                hangman.max_attempts_menu()
+                self.max_attempts_menu()
             elif settings_option == "0":
                 return
             else:
@@ -172,20 +172,3 @@ class Hangman:
             if x == a:
                 result.append(i)
         return result
-
-hangman = Hangman()
-
-hangman.header()
-input("Press enter to begin: ")
-
-while True:
-    option = hangman.main_menu()
-    if option == '1': #gamestart
-        hangman.start_game()
-    elif option == '2': #settings
-        settings_option = hangman.settings_menu()
-    elif option == '0': #exit
-        print("Bye!")
-        break
-    else: #invalid option
-        print("Invalid option selected")
