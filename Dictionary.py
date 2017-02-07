@@ -8,9 +8,6 @@ class Dictionary:
     app_id = "b6797cf9"
     language = "en"
 
-    def __init__(self):
-        print('Oxford Dictionary...')
-
     def get_word_info(self, word):
 
         action = "/entries/"+self.language+"/"+word.lower()+"/definitions"
@@ -27,14 +24,17 @@ class Dictionary:
 
         definitions = list()
 
-        results = json["results"][0]
-        entries = results["lexicalEntries"]
+        try:
+            results = json["results"][0]
+            entries = results["lexicalEntries"]
 
-        for entry in entries:
-            entry = entry["entries"][0]["senses"]
-            for definition in entry:
-                definition = definition['definitions'][0]
-                definition = definition.replace(word,"<WORD>")
-                definitions.append(definition)
+            for entry in entries:
+                entry = entry["entries"][0]["senses"]
+                for definition in entry:
+                    definition = definition['definitions'][0]
+                    definition = definition.replace(word,"<WORD>")
+                    definitions.append(definition)
+        except:
+            print("Could not load hints (definitions)")
 
         return definitions

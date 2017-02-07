@@ -1,4 +1,5 @@
 from RandomWord import RandomWord
+from Dictionary import Dictionary
 
 class Hangman:
     word = ""
@@ -7,6 +8,8 @@ class Hangman:
     maxAttempts = 8
     currentAttempts = 0
     guesses = list()
+    hints = list()
+    current_hints = 0
     word_source = "api"
 
     def header(self, option = None):
@@ -87,11 +90,14 @@ class Hangman:
         print("Hangman game starting...")
         print("Settings - Difficulty: ["+format(self.difficulty)+"] Max attempts: ["+format(self.maxAttempts)+"]")
         self.word = self.get_word()
+        self.hints = self.get_hints(self.word)
         self.current_word = list()
         self.guesses = list()
+        self.current_hints = 0
         self.currentAttempts = 0
         self.update_word_progress()
         self.output_current_word()
+        print("Press 0 at any time to exit and 1 for hint [{}] available".format(len(self.hints)))
 
         while True:
             self.output_guessed()
@@ -108,8 +114,15 @@ class Hangman:
                     print("Wrong.")
                     if(self.check_max_attempts()):
                         print("Max attempts reached - you ded")
+                        print("Word was: "+self.word)
                         return 0;
                 self.currentAttempts += 1
+            elif guess == "1":
+                print("Hint!")
+                self.show_hint()
+            elif guess == "0":
+                print("Exiting...")
+                return
             else:
                 print("Error: Please guess a single letter that you have not guessed before.")
 
@@ -140,6 +153,20 @@ class Hangman:
         else:
             return False
 
+    def get_hints(self, word):
+        dict = Dictionary()
+        word_info = dict.get_word_info(word)
+        return dict.get_word_definition(word_info,word)
+
+    def show_hint(self):
+        if self.current_hints >= len(self.hints):
+            print("You have already used up all your hints!")
+            return False
+        else:
+            print(self.hints[self.current_hints])
+            ++self.current_hints
+            return True
+
     def output_current_word(self):
         print()
         print("###############################")
@@ -152,9 +179,6 @@ class Hangman:
         if(len(self.guesses) > 0):
             guessString = ','.join(map(str, self.guesses))
             print("You have already guessed: "+guessString)
-
-    def game_menu(self):
-        self.header()
 
     def generate_word(self, method = 'local'):
         self.word = self.get_word()
